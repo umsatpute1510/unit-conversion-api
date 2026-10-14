@@ -1,15 +1,14 @@
 using System.Net;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
-using UnitConversion.Api;
 using UnitConversion.Model.Dtos.Requests;
 using UnitConversion.Model.Dtos.Responses;
 using UnitConversion.Utilities.Common.Models;
 
 namespace UnitConversion.Tests;
 
-public class ConversionControllerIntegrationTests(WebApplicationFactory<IApiMarker> factory)
-    : IClassFixture<WebApplicationFactory<IApiMarker>>
+public class ConversionControllerIntegrationTests(WebApplicationFactory<Program> factory)
+    : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly HttpClient _client = factory.CreateClient();
 
