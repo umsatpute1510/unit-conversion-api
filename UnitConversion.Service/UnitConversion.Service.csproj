@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="12.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.13" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\UnitConversion.Model\UnitConversion.Model.csproj" />
+    <ProjectReference Include="..\UnitConversion.Utilities\UnitConversion.Utilities.csproj" />
+  </ItemGroup>
+
+</Project>

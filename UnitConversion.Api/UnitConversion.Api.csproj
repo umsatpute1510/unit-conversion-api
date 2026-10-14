@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.13" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\UnitConversion.Model\UnitConversion.Model.csproj" />
+    <ProjectReference Include="..\UnitConversion.Service\UnitConversion.Service.csproj" />
+    <ProjectReference Include="..\UnitConversion.Utilities\UnitConversion.Utilities.csproj" />
+  </ItemGroup>
+
+</Project>
