@@ -10,5 +10,8 @@ public class ConversionRequestValidator : AbstractValidator<ConversionRequest>
         RuleFor(x => x.Category).NotEmpty().WithMessage("Category is required.");
         RuleFor(x => x.FromUnit).NotEmpty().WithMessage("FromUnit is required.");
         RuleFor(x => x.ToUnit).NotEmpty().WithMessage("ToUnit is required.");
+        RuleFor(x => x.Value)
+            .Must(v => !double.IsNaN(v) && !double.IsInfinity(v))
+            .WithMessage("Value must be a finite number.");
     }
 }

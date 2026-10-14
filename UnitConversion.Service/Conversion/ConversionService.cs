@@ -24,15 +24,17 @@ public partial class ConversionService(
         }
 
         string category = request.Category.Trim().ToLowerInvariant();
+        string fromUnit = request.FromUnit.Trim().ToLowerInvariant();
+        string toUnit   = request.ToUnit.Trim().ToLowerInvariant();
 
-        LogConversionRequest(request.Value, request.FromUnit, request.ToUnit, category);
+        LogConversionRequest(request.Value, fromUnit, toUnit, category);
 
         try
         {
             double result = category switch
             {
-                "temperature" => ConvertTemperature(request.FromUnit, request.ToUnit, request.Value),
-                _             => ConvertLinear(category, request.FromUnit, request.ToUnit, request.Value),
+                UnitDefinitions.TemperatureCategory => ConvertTemperature(fromUnit, toUnit, request.Value),
+                _                                   => ConvertLinear(category, fromUnit, toUnit, request.Value),
             };
 
             ConversionResponse response = new(request.Category, request.FromUnit, request.ToUnit, request.Value, result);
@@ -51,7 +53,7 @@ public partial class ConversionService(
         foreach ((string category, IReadOnlyDictionary<string, double> categoryUnits) in UnitDefinitions.LinearCategories)
             units[category] = [.. categoryUnits.Keys];
 
-        units["temperature"] = UnitDefinitions.Temperature;
+        units[UnitDefinitions.TemperatureCategory] = UnitDefinitions.Temperature;
 
         return ApiResponse.Success(200, new SupportedUnitsResponse(units));
     }
@@ -61,10 +63,10 @@ public partial class ConversionService(
         if (!UnitDefinitions.LinearCategories.TryGetValue(category, out IReadOnlyDictionary<string, double>? units))
             throw new InvalidConversionException($"Unknown category '{category}'.");
 
-        if (!units.TryGetValue(fromUnit.Trim(), out double fromFactor))
+        if (!units.TryGetValue(fromUnit, out double fromFactor))
             throw new InvalidConversionException($"Unknown unit '{fromUnit}' in category '{category}'.");
 
-        if (!units.TryGetValue(toUnit.Trim(), out double toFactor))
+        if (!units.TryGetValue(toUnit, out double toFactor))
             throw new InvalidConversionException($"Unknown unit '{toUnit}' in category '{category}'.");
 
         return value * (fromFactor / toFactor);
@@ -72,7 +74,7 @@ public partial class ConversionService(
 
     private static double ConvertTemperature(string fromUnit, string toUnit, double value)
     {
-        double celsius = fromUnit.Trim().ToLowerInvariant() switch
+        double celsius = fromUnit switch
         {
             "celsius"    => value,
             "fahrenheit" => (value - 32.0) * 5.0 / 9.0,
@@ -80,7 +82,7 @@ public partial class ConversionService(
             _ => throw new InvalidConversionException($"Unknown temperature unit '{fromUnit}'."),
         };
 
-        return toUnit.Trim().ToLowerInvariant() switch
+        return toUnit switch
         {
             "celsius"    => celsius,
             "fahrenheit" => (celsius * 9.0 / 5.0) + 32.0,

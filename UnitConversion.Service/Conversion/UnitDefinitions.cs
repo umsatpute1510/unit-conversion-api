@@ -3,6 +3,8 @@ namespace UnitConversion.Service.Conversion;
 // Factors are relative to a base unit: Length → meter, Weight → kilogram. Temperature is formula-based.
 internal static class UnitDefinitions
 {
+    internal const string TemperatureCategory = "temperature";
+
     internal static readonly IReadOnlyDictionary<string, double> Length =
         new Dictionary<string, double>(StringComparer.OrdinalIgnoreCase)
         {
