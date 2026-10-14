@@ -17,8 +17,8 @@ Run `GET /api/conversion/units` for the full list at runtime.
 **Prerequisites:** [.NET 10 SDK](https://dotnet.microsoft.com/download)
 
 ```bash
-git clone <repo-url>
-cd Assessment
+git clone https://github.com/umsatpute1510/unit-conversion-api
+cd unit-conversion-api
 dotnet run --project UnitConversion.Api
 ```
 
@@ -68,14 +68,26 @@ Returns all supported categories and their unit names.
 ```
 UnitConversion.Api/
 ├── Controllers/            HTTP layer — routes requests, returns responses
-├── Middleware/             Global exception handler
-├── Models/                 Request / response DTOs
-└── Services/
-    ├── Conversion/         IConversionService + ConversionService (business logic)
-    └── Units/              UnitDefinitions (hardcoded unit factors — isolated from logic)
+└── Middleware/             Global exception handler
+
+UnitConversion.Model/
+└── Dtos/
+    ├── Requests/           ConversionRequest record
+    └── Responses/          ConversionResponse, SupportedUnitsResponse records
+
+UnitConversion.Service/
+└── Conversion/
+    ├── Contract/           IConversionService interface
+    ├── Validators/         ConversionRequestValidator (FluentValidation)
+    ├── ConversionService   Business logic — validation, dispatch, conversion
+    └── UnitDefinitions     Hardcoded unit factors — isolated from logic (SRP)
+
+UnitConversion.Utilities/
+├── Common/Models/          ApiResponse<T> result wrapper
+└── Exceptions/Conversion/  InvalidConversionException
 
 UnitConversion.Tests/
-├── UnitConverterServiceTests.cs           Unit tests (logic only)
+├── ConversionServiceTests.cs              Unit tests (logic only)
 └── ConversionControllerIntegrationTests.cs  Integration tests (full HTTP stack)
 ```
 
